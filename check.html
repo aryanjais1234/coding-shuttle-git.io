@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Face Scan</title>
+</head>
+<body>
+  <video id="video" width="640" height="480" autoplay></video>
+  <canvas id="canvas" width="640" height="480"></canvas>
+</body>
+</html>
+
+<script>
+    // Get the video and canvas elements
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const context = canvas.getContext('2d');
+  
+    // Set up the webcam stream
+    const constraints = {
+      video: true
+    };
+    navigator.mediaDevices.getUserMedia(constraints)
+      .then(function(stream) {
+        video.srcObject = stream;
+      })
+      .catch(function(error) {
+        console.error(error);
+      });
+
+
+// Scan for faces in the video
+function scanFaces() {
+  // Draw the video frame to the canvas
+  context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+  // Scan for faces in the image
+  const faces = ctrack.getCurrentPosition();
+
+  // Draw a rectangle around each face
+  context.strokeStyle = 'red';
+  for (let i = 0; i < faces.length; i++) {
+    context.beginPath();
+    context.rect(faces[i][0], faces[i][1], faces[i][2], faces[i][3]);
+    context.stroke();
+  }
+}
+  // Start scanning for faces
+setInterval(scanFaces, 1000);
+</script>
